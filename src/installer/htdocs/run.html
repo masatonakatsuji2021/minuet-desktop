@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<style>
+.section .command {
+    padding:10px;
+    background:#222;
+    color:#ddd;
+    line-height:1.3rem;
+    position:absolute;
+    overflow:auto;
+    left:10px;
+    top:10px;
+    right:10px;
+    bottom:10px;
+}
+</style>
+<div class="section">   
+    <table>
+        <tr class="header">
+            <td>
+                <div>Minuet Desktop</div>
+                <h1>Installing...</h1>
+            </td>
+        </tr>
+        <tr class="content">
+            <td>
+                <pre class="command"><code></code></pre>
+            </td>
+        </tr>
+        <tr class="footer">
+            <td>
+                <div class="float">
+                    <a class="float-left cancel">Cancel</a>
+                    <a class="btn next float-right disable">Exit</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+const cmd = document.querySelector(".command");
+const next = document.querySelector(".next");
+const cancel = document.querySelector(".cancel");
+
+const out = (string, changed) => {
+    if (changed) {
+        const innerHTML = cmd.innerHTML;
+        let buffers = innerHTML.split("\n");
+        buffers.pop();
+        buffers.pop();
+        cmd.innerHTML = buffers.join("\n") + "\n" + string + "\n";
+    }
+    else {
+        cmd.innerHTML += string + "\n";
+    }
+    cmd.scrollTop += 100;
+};
+
+next.addEventListener("click", () => {
+    window.api.send("message-from-renderer", "close");
+});
+cancel.addEventListener("click", () => {
+    if (confirm("インストールを中止しますか？")) {
+        window.alert("インストールを中止しました");
+        window.api.send("message-from-renderer", "close");
+    }
+});
+
+out("Installer Start.");
+window.api.send("message-from-renderer", "start");
+ 
+window.api.receive('reply-from-main', (response) => {
+    if (response.type == "add") {
+        out(response.message.toString());
+    }
+    else if (response.type == "change") {
+        out(response.message.toString(), true);
+    }
+    else if (response.type == "error") {
+        out(response.message.toString());
+        setTimeout(()=>{
+            window.alert("インストールに失敗しました");
+        }, 100);
+        document.querySelector(".btn.next").classList.remove("disable");
+    }
+    else if (response.type == "complete") {
+        out(response.message.toString());
+        setTimeout(()=>{
+            window.alert("インストールに成功しました");
+        }, 100);
+        document.querySelector(".btn.next").classList.remove("disable");
+    }
+});
+</script>
+</body>
+</html>
