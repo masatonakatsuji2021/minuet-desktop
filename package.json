@@ -1,2 +1,29 @@
 {
-}
+    "name": "minuet-desktop",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/masatonakatsuji2021/minuet-desktop.git"
+    },
+    "keywords": [
+      "server",
+      "logger",
+      "webserver",
+      "node"
+    ],
+    "author": "Masato Nakatsuji",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/masatonakatsuji2021/minuet-desktop/issues"
+    },
+    "homepage": "https://github.com/masatonakatsuji2021/minuet-desktop#readme",
+    "dependencies": {
+      "@types/node": "^20.12.12",
+      "electron": "^31.0.1"
+    }
+  }
+  
